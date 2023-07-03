@@ -4,8 +4,8 @@ const {
   createUser,
   updateUser,
   deleteReservationWithIdUser,
-  getUserId,
   deleteUser,
+  getUserIdByName,
 } = require("../queries/queries");
 
 // GET ALL USERS
@@ -58,7 +58,7 @@ const deleteUserById = async (req, res) => {
   const client = await pool.connect();
   const requiredId = req.params.id;
 
-  const userQuery = getUserId;
+  const userQuery = getUserIdByName;
   const userResult = await client.query(userQuery, [requiredId]);
   if (userResult.rows.length === 0) {
     return res.status(404).json({ error: "Este usuario no existe" });

@@ -2,11 +2,13 @@
 const listUsers = `SELECT * FROM users`;
 const listRooms = `SELECT * FROM rooms`;
 const getRoomId = `SELECT * FROM rooms WHERE room_id = $1`;
-const getUserId = `SELECT user_id FROM users WHERE users.name = $1`;
+const getUserIdByName = `SELECT user_id FROM users WHERE users.name = $1`;
 const listReservations = `SELECT reservation_id, room_id, user_id, TO_CHAR(time_start, 'YYYY-MM-DD HH24:MI') AS time_start, TO_CHAR(time_end, 'YYYY-MM-DD HH24:MI') AS time_end FROM reservations`;
 const getReservationsByUserID = `SELECT reservation_id, room_id, users.user_id, TO_CHAR(time_start, 'YYYY-MM-DD HH24:MI') AS time_start, TO_CHAR(time_end, 'YYYY-MM-DD HH24:MI') AS time_end FROM reservations
 INNER JOIN users ON reservations.user_id = users.user_id
 WHERE users.name = $1`;
+const getAllUserById = `SELECT * FROM users WHERE user_id = $1`;
+const getAllRoomById = `SELECT * FROM rooms WHERE room_id = $1`;
 
 // ------------- POST ---------------------------
 const createRoom = `INSERT INTO rooms (name, tv, air_conditioning) VALUES ($1, $2, $3)`;
@@ -29,7 +31,7 @@ module.exports = {
   listRooms,
   listReservations,
   getReservationsByUserID,
-  getUserId,
+  getUserIdByName,
   createRoom,
   createUser,
   createReservation,
@@ -40,5 +42,7 @@ module.exports = {
   deleteUser,
   deleteReservationWithIdUser,
   deleteRoom,
-  getRoomId
+  getRoomId,
+  getAllUserById,
+  getAllRoomById,
 };
