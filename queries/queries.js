@@ -1,6 +1,8 @@
 //  =================== GETS ========================
 const listUsers = `SELECT * FROM users`;
 const listRooms = `SELECT * FROM rooms`;
+const getRoomId = `SELECT * FROM rooms WHERE room_id = $1`;
+const getUserId = `SELECT user_id FROM users WHERE users.name = $1`;
 const listReservations = `SELECT reservation_id, room_id, user_id, TO_CHAR(time_start, 'YYYY-MM-DD HH24:MI') AS time_start, TO_CHAR(time_end, 'YYYY-MM-DD HH24:MI') AS time_end FROM reservations`;
 const getReservationsByUserID = `SELECT reservation_id, room_id, users.user_id, TO_CHAR(time_start, 'YYYY-MM-DD HH24:MI') AS time_start, TO_CHAR(time_end, 'YYYY-MM-DD HH24:MI') AS time_end FROM reservations
 INNER JOIN users ON reservations.user_id = users.user_id
@@ -27,6 +29,7 @@ module.exports = {
   listRooms,
   listReservations,
   getReservationsByUserID,
+  getUserId,
   createRoom,
   createUser,
   createReservation,
@@ -37,4 +40,5 @@ module.exports = {
   deleteUser,
   deleteReservationWithIdUser,
   deleteRoom,
+  getRoomId
 };
