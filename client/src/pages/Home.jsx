@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center justify-center mt-20 w-screen">
       <h1 className="font-bold text-white text-4xl bg-userReservation p-2 shadow-md shadow-amber-600 rounded-2xl">Welcome {loggedUser}</h1>
-      <div className="flex flex-wrap items-center justify-center gap-6 p-10 font-bold">
+      <div className="w-3/4 flex flex-wrap items-center justify-center gap-6 p-10 font-bold">
         {reservationsList ? (
           reservationsList.map((reservation) => (
             <div className="bg-userReservation text-white flex flex-col p-8 rounded-3xl shadow-xl shadow-amber-700 items-center w-1/4">

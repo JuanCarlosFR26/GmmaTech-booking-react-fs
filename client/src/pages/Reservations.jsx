@@ -1,16 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DataUser } from "../context/UserDataProvider";
+import Modal from "../components/Modal";
 
 const Reservations = () => {
-
-  const { temporaryId } = useContext(DataUser)
 
   const [reservations, setReservations] = useState(null);
   const [openForm, setOpenform] = useState(false);
   const [roomId, setRoomId] = useState(null);
   const [timeStart, setTimeStart] = useState(null);
   const [timeEnd, setTimeEnd] = useState(null);
-
+  const [modal, setModal] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -37,7 +36,7 @@ const Reservations = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formattedIdUser = parseInt(temporaryId);
+    const formattedIdUser = parseInt(sessionStorage.getItem("user_id"));
     const formattedRoom = parseInt(roomId);
     const formattedStart = timeStart.replace("T", " ");
     const formattedEnd = timeEnd.replace("T", " ");
@@ -50,7 +49,6 @@ const Reservations = () => {
     };
 
     try {
-      if (temporaryId) {
         const response = await fetch(
           `http://localhost:8001/reservation/create`,
           {
@@ -61,15 +59,15 @@ const Reservations = () => {
             body: JSON.stringify(reservationData),
           }
         );
-        const data = await response.json();
-        if (data) {
-          setReservations((prev) => [...prev, reservationData]);
-        }
-      }
-    } catch (error) {
+        setReservations((prev) => [...prev, reservationData]);
+        setModal(true);
+        setInterval(() => {
+          setModal(false);
+        }, 2000)
+      } catch (error) {
       console.log(error);
     }
-    
+
   };
 
   return (
@@ -127,6 +125,7 @@ const Reservations = () => {
         )}
       </div>
       <div className="flex flex-col items-center gap-20 bg-reservations shadow-xl shadow-amber-800 w-3/4 p-6 rounded-2xl">
+      { modal && <Modal text={'Reservation Done!'} className={'flex items-center justify-center bg-green-500 w-[200px] h-[80px] font-bold text-white rounded-2xl'}/>}
         <h2 className="text-3xl font-bold">All the Reservations</h2>
         <div className="flex flex-wrap justify-center gap-10">
           {reservations ? (
