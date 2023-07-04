@@ -1,6 +1,17 @@
+import { signOut } from "firebase/auth";
 import { Outlet, Link } from "react-router-dom";
+import { auth } from "../.firebase/firebase";
 
 const Layout = () => {
+
+  const handleLogout = async () => {
+    await signOut(auth).then(() => {
+      console.log('Sign-out successful');
+    }).catch((error) => {
+      console.error(error)
+    })
+  }
+
   return (
     <>
       <nav className="w-screen bg-amber-600 text-white font-bold text-2xl">
@@ -18,10 +29,7 @@ const Layout = () => {
           </div>
           <div className="flex gap-20">
             <li className="hover:text-pink-700">
-              <Link to="/register">Register</Link>
-            </li>
-            <li className="hover:text-pink-700">
-              <Link to="/login">Login</Link>
+              <Link onClick={() => handleLogout()} to="/login">Log out</Link>
             </li>
           </div>
         </ul>
