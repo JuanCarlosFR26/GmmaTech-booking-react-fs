@@ -11,21 +11,32 @@ const ReservationsUserProvider = ({ children }) => {
   useEffect(() => {
     const actualUser = sessionStorage.getItem("currentUser");
     console.log(actualUser);
-    if (actualUser) {
-      getData(`http://localhost:8001/reservations/user/${actualUser}`).then(
-        (res) => {
-          sessionStorage.setItem("reservations", JSON.stringify(res.result));
-        }
-      );
+    try {
+      if (actualUser) {
+        getData(`http://localhost:8001/reservations/user/${actualUser}`).then(
+          (res) => {
+            sessionStorage.setItem("reservations", JSON.stringify(res.result));
+          }
+        );
+      }
+    } catch (error) {
+      console.log(error);
     }
   }, [isLogged]);
 
   useEffect(() => {
-    setReservationsList(JSON.parse(sessionStorage.getItem('reservations')))
-  }, [])
+    try {
+      const actualReservations = sessionStorage.getItem("reservations");
+      setReservationsList(JSON.parse(actualReservations));
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   return (
-    <UsersReservations.Provider value={{ reservationsList }}>
+    <UsersReservations.Provider
+      value={{ reservationsList, setReservationsList }}
+    >
       {children}
     </UsersReservations.Provider>
   );

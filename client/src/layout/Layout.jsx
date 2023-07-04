@@ -3,16 +3,19 @@ import { Outlet, Link } from "react-router-dom";
 import { auth } from "../.firebase/firebase";
 import { useContext } from "react";
 import { DataUser } from "../context/UserDataProvider";
+import { UsersReservations } from "../context/ReservationsUserProvider";
 
 const Layout = () => {
 
   const { loggedUser, setLoggedUser, setIsLogged } = useContext(DataUser);
+  const { setReservationsList } = useContext(UsersReservations);
 
   const handleLogout = async () => {
     await signOut(auth).then(() => {
       console.log('Sign-out successful');
       setIsLogged(false)
       setLoggedUser(null)
+      setReservationsList(null);
       sessionStorage.removeItem('user_id');
       sessionStorage.removeItem('reservations');
       sessionStorage.removeItem('currentUser');

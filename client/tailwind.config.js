@@ -9,7 +9,8 @@ module.exports = {
         'hero-pattern': "url('../src/assets/3px-tile.png')"
       },
       backgroundColor: {
-        reservations: 'rgba(255, 255, 255, 0.3)'
+        reservations: 'rgba(255, 255, 255, 0.3)',
+        userReservation: 'rgba(40, 40, 40, 0.7)'
       }
     },
   },
