@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply overflow-hidden
+}
+
+label {
+    @apply font-bold
+}

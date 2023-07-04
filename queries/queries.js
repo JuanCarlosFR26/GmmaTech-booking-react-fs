@@ -3,7 +3,7 @@ const listUsers = `SELECT * FROM users`;
 const listRooms = `SELECT * FROM rooms`;
 const getRoomId = `SELECT * FROM rooms WHERE room_id = $1`;
 const getUserIdByName = `SELECT user_id FROM users WHERE users.name = $1`;
-const listReservations = `SELECT reservation_id, room_id, user_id, TO_CHAR(time_start, 'YYYY-MM-DD HH24:MI') AS time_start, TO_CHAR(time_end, 'YYYY-MM-DD HH24:MI') AS time_end FROM reservations`;
+const listReservations = `SELECT reservations.reservation_id, reservations.room_id, reservations.user_id, TO_CHAR(reservations.time_start, 'YYYY-MM-DD HH24:MI') AS time_start, TO_CHAR(reservations.time_end, 'YYYY-MM-DD HH24:MI') AS time_end, rooms.room_name, users.name FROM reservations JOIN rooms ON reservations.room_id = rooms.room_id JOIN users ON reservations.user_id = users.user_id`;
 const getReservationsByUserID = `SELECT reservation_id, room_id, users.user_id, TO_CHAR(time_start, 'YYYY-MM-DD HH24:MI') AS time_start, TO_CHAR(time_end, 'YYYY-MM-DD HH24:MI') AS time_end FROM reservations
 INNER JOIN users ON reservations.user_id = users.user_id
 WHERE users.name = $1`;
