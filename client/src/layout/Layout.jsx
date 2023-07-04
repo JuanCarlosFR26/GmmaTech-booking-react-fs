@@ -1,12 +1,21 @@
 import { signOut } from "firebase/auth";
 import { Outlet, Link } from "react-router-dom";
 import { auth } from "../.firebase/firebase";
+import { useContext } from "react";
+import { DataUser } from "../context/UserDataProvider";
 
 const Layout = () => {
+
+  const { loggedUser, setLoggedUser, setIsLogged } = useContext(DataUser);
 
   const handleLogout = async () => {
     await signOut(auth).then(() => {
       console.log('Sign-out successful');
+      setIsLogged(false)
+      setLoggedUser(null)
+      sessionStorage.removeItem('user_id');
+      sessionStorage.removeItem('reservations');
+      sessionStorage.removeItem('currentUser');
     }).catch((error) => {
       console.error(error)
     })
@@ -28,8 +37,8 @@ const Layout = () => {
             </li>
           </div>
           <div className="flex gap-20">
-            <li className="hover:text-pink-700">
-              <Link onClick={() => handleLogout()} to="/login">Log out</Link>
+            <li >
+              <p className="flex gap-8 text-sm items-center"> {loggedUser} <Link className="text-2xl hover:text-pink-700" onClick={() => handleLogout()} to="/login"> Log out</Link></p>
             </li>
           </div>
         </ul>

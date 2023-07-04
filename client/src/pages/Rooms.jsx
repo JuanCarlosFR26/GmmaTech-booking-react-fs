@@ -28,7 +28,7 @@ const Rooms = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 w-screen p-10">
+    <div className='flex flex-col items-center justify-center gap-8 w-full p-10'>
       {rooms &&
         rooms.map((room, i) => (
           <div
@@ -36,7 +36,7 @@ const Rooms = () => {
             className="bg-amber-100 flex flex-col items-center justify-center gap-10 w-2/4 p-8 rounded-3xl shadow-2xl shadow-amber-900"
           >
             <img src={room.room_name === 'Blue' ? blue : room.room_name === 'Yellow' ? yellow : room.room_name === 'Black' ? black : room.room_name === 'White' ? white : room.room_name === 'Pink' ? pink : red} alt={room.room_name.toLowerCase()}></img>
-            <h2>{room.room_name} Room</h2>
+            <h2>{room.room_name} Room - #Id {room.room_id}</h2>
             <p className="flex gap-4 items-center font-bold">{room.tv ? "With TV" : "Without TV"} - <img className="w-10" src={room.tv ? TV : NOTV}></img></p>
             <p className="flex gap-4 items-center font-bold">
               {room.air_conditioning

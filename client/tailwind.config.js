@@ -4,7 +4,14 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'hero-pattern': "url('../src/assets/3px-tile.png')"
+      },
+      backgroundColor: {
+        reservations: 'rgba(255, 255, 255, 0.3)'
+      }
+    },
   },
   plugins: [],
 }

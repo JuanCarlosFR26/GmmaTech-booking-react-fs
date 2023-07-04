@@ -1,13 +1,15 @@
 import React, { useContext, useState } from "react";
 import BG from "../assets/gamma.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchSignInMethodsForEmail, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../.firebase/firebase";
 import { DataUser } from "../context/UserDataProvider";
 import RegisterError from "../components/RegisterError";
 
 const Login = () => {
-  const { setIsLogged } = useContext(DataUser);
+  const { setIsLogged, setLoggedUser } = useContext(DataUser);
 
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
@@ -15,6 +17,7 @@ const Login = () => {
   const [errorEmail, setErrorEmail] = useState(false);
 
   const navigate = useNavigate();
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,27 +25,27 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            console.log(userCredential);
           const user = userCredential.user;
+          sessionStorage.setItem('currentUser', email)
+          setIsLogged(true);
+          navigate('/')
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorCode)
-          if(errorCode === 'auth/wrong-password') {
-            setModalError(true)
+          console.log(errorCode);
+          if (errorCode === "auth/wrong-password") {
+            setModalError(true);
             setTimeout(() => {
-                setModalError(false);
-            }, 2000)
-          } else if(errorCode === 'auth/user-not-found') {
-            setErrorEmail(true)
+              setModalError(false);
+            }, 2000);
+          } else if (errorCode === "auth/user-not-found") {
+            setErrorEmail(true);
             setTimeout(() => {
-                setErrorEmail(false)
-            }, 2000)
+              setErrorEmail(false);
+            }, 2000);
           }
         });
-        setIsLogged(true);
-        navigate('/')
     } catch (error) {
       console.error("Error al iniciar sesión", error);
     }
@@ -69,7 +72,7 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            {errorEmail && <RegisterError text={'This user is not exists'}/>}
+            {errorEmail && <RegisterError text={"This user is not exists"} />}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="password">Password</label>
@@ -80,7 +83,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            {modalError && <RegisterError text={'Invalid password'}/>}
+            {modalError && <RegisterError text={"Invalid password"} />}
           </div>
           <input
             className="bg-teal-800 text-white font-bold p-4 rounded-2xl cursor-pointer hover:bg-amber-500 hover:text-black"

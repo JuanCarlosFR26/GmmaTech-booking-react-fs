@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    @apply overflow-hidden
+    @apply overflow-x-hidden bg-hero-pattern bg-amber-200
 }
 
 label {

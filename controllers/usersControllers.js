@@ -22,6 +22,21 @@ const getUsers = async (req, res) => {
   }
 };
 
+// GET USER ID
+const getUserIdWithUserEmail = async (req, res) => {
+  const client = await pool.connect();
+  const requiredEmail = req.params.email;
+
+  try {
+    const response = await client.query(getUserIdByName, [requiredEmail]);
+    res.status(200).json({ response: true, result: response.rows });
+  } catch (error) {
+    res.status(400).json({ response: false, error: error.message });
+  } finally {
+    client.release(true);
+  }
+};
+
 // CREATE NEW USER
 const createNewUser = async (req, res) => {
   const { name } = req.body;
@@ -81,6 +96,7 @@ const deleteUserById = async (req, res) => {
 
 module.exports = {
   getUsers,
+  getUserIdWithUserEmail,
   createNewUser,
   updateUserById,
   deleteUserById,

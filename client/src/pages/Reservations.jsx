@@ -1,9 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { getData } from "../functions/functions";
+import React, { useContext, useEffect, useState } from "react";
+import { DataUser } from "../context/UserDataProvider";
 
 const Reservations = () => {
+
+  const { temporaryId } = useContext(DataUser)
+
   const [reservations, setReservations] = useState(null);
   const [openForm, setOpenform] = useState(false);
+  const [roomId, setRoomId] = useState(null);
+  const [timeStart, setTimeStart] = useState(null);
+  const [timeEnd, setTimeEnd] = useState(null);
+
+
+  const fetchData = async () => {
+    try {
+      const reservationData = await fetch(`http://localhost:8001/reservations`);
+      const response = await reservationData.json();
+      setReservations(response.result);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const openFm = () => {
     setOpenform(true);
@@ -13,26 +34,52 @@ const Reservations = () => {
     setOpenform(false);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const reservationData = await getData(
-          `http://localhost:8001/reservations`
-        );
-        setReservations(reservationData.result);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formattedIdUser = parseInt(temporaryId);
+    const formattedRoom = parseInt(roomId);
+    const formattedStart = timeStart.replace("T", " ");
+    const formattedEnd = timeEnd.replace("T", " ");
+
+    const reservationData = {
+      user_id: formattedIdUser,
+      room_id: formattedRoom,
+      time_start: formattedStart,
+      time_end: formattedEnd,
     };
 
-    fetchData();
-  }, []);
+    try {
+      if (temporaryId) {
+        const response = await fetch(
+          `http://localhost:8001/reservation/create`,
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(reservationData),
+          }
+        );
+        const data = await response.json();
+        if (data) {
+          setReservations((prev) => [...prev, reservationData]);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    
+  };
 
   return (
-    <div className="mt-20 w-screen h-screen flex flex-col items-center gap-40">
+    <div className="mt-20 w-screen h-screen flex flex-col items-center gap-20 p-10">
       <div className="">
         {openForm ? (
-          <form className="relative p-10 w-96 h-auto bg-teal-300 rounded-2xl flex flex-col items-center justify-center gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="relative p-10 w-96 h-auto bg-amber-200 rounded-2xl flex flex-col items-center justify-center gap-4"
+          >
             <i
               onClick={() => closeFm()}
               className="fa-solid fa-x cursor-pointer absolute top-2 right-2 self-end p-2 text-white bg-red-600 rounded-full"
@@ -43,6 +90,7 @@ const Reservations = () => {
                 className="rounded-2xl h-8 p-4 outline-none"
                 type="text"
                 name="room"
+                onChange={(e) => setRoomId(e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -51,6 +99,7 @@ const Reservations = () => {
                 className="rounded-2xl h-8 p-4 outline-none"
                 type="datetime-local"
                 name="timeStart"
+                onChange={(e) => setTimeStart(e.target.value)}
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -59,6 +108,7 @@ const Reservations = () => {
                 className="rounded-2xl h-8 p-4 outline-none"
                 type="datetime-local"
                 name="timeEnd"
+                onChange={(e) => setTimeEnd(e.target.value)}
               />
             </div>
             <input
@@ -76,20 +126,24 @@ const Reservations = () => {
           </button>
         )}
       </div>
-      <div className="flex gap-10 fixed top-[600px]">
-        {reservations ? (
-          reservations.map((reservation, i) => (
-            <div className="bg-orange-600 p-6 rounded-2xl font-bold" key={i}>
-              <h5>Room {reservation.room_name}</h5>
-              <h2>Reserved by {reservation.name}</h2>
-              <p>
-                Reserved from {reservation.time_start} to {reservation.time_end}
-              </p>
-            </div>
-          ))
-        ) : (
-          <div>No reservations</div>
-        )}
+      <div className="flex flex-col items-center gap-20 bg-reservations shadow-xl shadow-amber-800 w-3/4 p-6 rounded-2xl">
+        <h2 className="text-3xl font-bold">All the Reservations</h2>
+        <div className="flex flex-wrap justify-center gap-10">
+          {reservations ? (
+            reservations.map((reservation, i) => (
+              <div className="bg-orange-600 p-6 rounded-2xl font-bold" key={i}>
+                <h5>Room {reservation.room_name}</h5>
+                <h2>Reserved by {reservation.name}</h2>
+                <p>
+                  Reserved from {reservation.time_start} to{" "}
+                  {reservation.time_end}
+                </p>
+              </div>
+            ))
+          ) : (
+            <div>No reservations</div>
+          )}
+        </div>
       </div>
     </div>
   );

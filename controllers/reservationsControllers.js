@@ -51,10 +51,10 @@ const createNewReservation = async (req, res) => {
 
 const getReservationsFromUserId = async (req, res) => {
   const client = await pool.connect();
-  const requiredId = req.params.id;
+  const requiredEmail = req.params.email;
 
   try {
-    const response = await client.query(getReservationsByUserID, [requiredId]);
+    const response = await client.query(getReservationsByUserID, [requiredEmail]);
     if (response.rows.length === 0) {
       res.status(200).json({
         response: true,
