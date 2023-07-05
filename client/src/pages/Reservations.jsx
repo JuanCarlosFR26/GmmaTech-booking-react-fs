@@ -3,13 +3,13 @@ import { DataUser } from "../context/UserDataProvider";
 import Modal from "../components/Modal";
 
 const Reservations = () => {
-
   const [reservations, setReservations] = useState(null);
   const [openForm, setOpenform] = useState(false);
   const [roomId, setRoomId] = useState(null);
   const [timeStart, setTimeStart] = useState(null);
   const [timeEnd, setTimeEnd] = useState(null);
   const [modal, setModal] = useState(false);
+  const [error, setError] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -49,26 +49,34 @@ const Reservations = () => {
     };
 
     try {
-        const response = await fetch(
-          `http://localhost:8001/reservation/create`,
-          {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify(reservationData),
-          }
-        );
+      const response = await fetch(`http://localhost:8001/reservation/create`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(reservationData),
+      });
+      if (response.ok) {
         setReservations((prev) => [...prev, reservationData]);
-        setModal(true);
-        setInterval(() => {
-          setModal(false);
-        }, 2000)
-      } catch (error) {
+        setModal(true)
+      } else {
+        setError(true);
+      }
+    } catch (error) {
       console.log(error);
     }
-
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if(modal) {
+        setModal(false)
+      }
+      if(error) {
+        setError(false)
+      }
+    }, 2000)
+  })
 
   return (
     <div className="mt-20 w-screen h-screen flex flex-col items-center gap-20 p-10">
@@ -125,8 +133,18 @@ const Reservations = () => {
         )}
       </div>
       <div className="flex flex-col items-center gap-20 bg-reservations shadow-xl shadow-amber-800 w-3/4 p-6 rounded-2xl">
-      { modal && <Modal text={'Reservation Done!'} className={'flex items-center justify-center bg-green-500 w-[200px] h-[80px] font-bold text-white rounded-2xl'}/>}
-        <h2 className="text-3xl font-bold">All the Reservations</h2>
+        {modal && (
+          <Modal
+            text={"Reservation Done!"}
+            className={
+              "flex items-center justify-center bg-green-500 w-[200px] h-[80px] font-bold text-white rounded-2xl"
+            }
+          />
+        )}
+        {error && <Modal text={'This room is already booked at this time'} className={
+              "flex text-center items-center justify-center bg-red-500 w-[200px] h-[80px] font-bold text-white rounded-2xl"
+            }/>}
+        <h2 className="text-3xl font-bold">All Reservations</h2>
         <div className="flex flex-wrap justify-center gap-10">
           {reservations ? (
             reservations.map((reservation, i) => (

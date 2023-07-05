@@ -7,6 +7,7 @@ const {
   getAllUserById,
   getAllRoomById,
   createReservation,
+  existingReservation,
 } = require("../queries/queries");
 
 const getReservations = async (req, res) => {
@@ -27,6 +28,16 @@ const createNewReservation = async (req, res) => {
   const { user_id, room_id, time_start, time_end } = req.body;
 
   try {
+    const existsReservation = await pool.query(existingReservation, [
+      room_id,
+      time_start,
+      time_end,
+    ]);
+
+    if (existsReservation.rows.length > 0) {
+      return res.status(400).json({ error: "El horario está ocupado." });
+    }
+    
     const response = await client.query(getAllUserById, [user_id]);
     if (response.rows.length === 0) {
       return res.status(400).json({ error: "this user is not exists" });
@@ -54,7 +65,9 @@ const getReservationsFromUserId = async (req, res) => {
   const requiredEmail = req.params.email;
 
   try {
-    const response = await client.query(getReservationsByUserID, [requiredEmail]);
+    const response = await client.query(getReservationsByUserID, [
+      requiredEmail,
+    ]);
     if (response.rows.length === 0) {
       res.status(200).json({
         response: true,
@@ -110,5 +123,5 @@ module.exports = {
   getReservationsFromUserId,
   updateReservationById,
   deleteReservationById,
-  createNewReservation
+  createNewReservation,
 };

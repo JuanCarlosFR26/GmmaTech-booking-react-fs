@@ -9,6 +9,7 @@ INNER JOIN users ON reservations.user_id = users.user_id
 WHERE users.name = $1`;
 const getAllUserById = `SELECT * FROM users WHERE user_id = $1`;
 const getAllRoomById = `SELECT * FROM rooms WHERE room_id = $1`;
+const existingReservation = `SELECT * FROM reservations WHERE room_id = $1 AND time_start < $3 AND time_end > $2`
 
 // ------------- POST ---------------------------
 const createRoom = `INSERT INTO rooms (name, tv, air_conditioning) VALUES ($1, $2, $3)`;
@@ -45,4 +46,5 @@ module.exports = {
   getRoomId,
   getAllUserById,
   getAllRoomById,
+  existingReservation
 };
