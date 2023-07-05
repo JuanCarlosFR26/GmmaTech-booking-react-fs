@@ -13,3 +13,12 @@ export const addUser = async (url, email) => {
         body: JSON.stringify({ name: email})
     })
 }
+
+export const deleteReservation = async (url) => {
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}

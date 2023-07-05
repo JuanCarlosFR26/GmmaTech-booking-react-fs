@@ -23,6 +23,6 @@ router.get('/reservations', getReservations);
 router.get('/reservations/user/:email', getReservationsFromUserId);
 router.post('/reservation/create', createNewReservation);
 router.patch('/reservation/update/:id', updateReservationById);
-router.delete('reservation/delete/:id', deleteReservationById);
+router.delete('/reservation/delete/:id', deleteReservationById);
 
 module.exports = router;
