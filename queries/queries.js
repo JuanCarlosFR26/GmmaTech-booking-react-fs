@@ -1,3 +1,4 @@
+// Ordenar por entidad en vez de por peticiones
 //  =================== GETS ========================
 const listUsers = `SELECT * FROM users`;
 const listRooms = `SELECT * FROM rooms`;

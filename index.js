@@ -12,6 +12,8 @@ app.use(cors());
 
 app.use(express.json());
 
+
+// Crear subroutes
 app.use('/', router);
 
 app.listen(PORT, () => {

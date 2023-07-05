@@ -4,6 +4,8 @@ const { getRooms, getRoomById, createNewRoom, updateRoomById, deleteRoomById } =
 const { getReservations, getReservationsFromUserId, createNewReservation, updateReservationById, deleteReservationById } = require("../controllers/reservationsControllers");
 const router = express.Router();
 
+// Crear subroutes. Express nested routers
+
 // USERS
 router.get('/users', getUsers);
 router.get('/user/:email', getUserIdWithUserEmail)
