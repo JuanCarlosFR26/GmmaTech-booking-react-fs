@@ -76,7 +76,7 @@ const Reservations = () => {
         setError(false)
       }
     }, 2000)
-  })
+  }, [])
 
   return (
     <div className="mt-20 w-screen h-screen flex flex-col items-center gap-20 p-10">

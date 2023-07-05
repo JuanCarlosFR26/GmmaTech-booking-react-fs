@@ -10,7 +10,6 @@ const ReservationsUserProvider = ({ children }) => {
 
   useEffect(() => {
     const actualUser = sessionStorage.getItem("currentUser");
-    console.log(actualUser);
     try {
       if (actualUser) {
         getData(`http://localhost:8001/reservations/user/${actualUser}`).then(
